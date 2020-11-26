@@ -5,7 +5,7 @@ from binascii import hexlify
 status = '「勇敢な！」'
 
 
-class Utility(commands.Cog):
+class Listeners(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.clear_help_data.start()
@@ -76,4 +76,4 @@ class Utility(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Utility(bot))
+    bot.add_cog(Listeners(bot))

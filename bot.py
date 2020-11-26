@@ -1,6 +1,6 @@
 import discord, asyncpg, json
 from discord.ext import commands
-from utils.embuilder import generator, jsons
+from utils.utility import generator, jsons
 
 intents = discord.Intents.default()
 intents.members, intents.reactions, intents.presences, intents.typing = True, True, True, True
@@ -10,7 +10,7 @@ jsons(bot)
 
 extensions = (
     'cogs.IT',
-    'cogs.utility'
+    'cogs.listeners'
 )
 
 
@@ -24,7 +24,7 @@ async def help(ctx):
     embeds = await generator(ctx.author, bot)
     await ctx.message.delete()
     for embed in embeds:
-        embed.set_footer(text=f'Page {embeds.index(embed) + 1}/{len(embeds)}')
+        embed.set_footer(text=f'Page {embeds.index(embed) + 1}/{len(embeds) - 1}')
     message = await ctx.send(embed=embeds[0])
     for emoji in ['\N{LEFTWARDS BLACK ARROW}', '\N{BLACK RIGHTWARDS ARROW}', '\N{CROSS MARK}']:
         await message.add_reaction(emoji)
