@@ -6,10 +6,7 @@ import json
 from utils.embuilder import generator
 
 intents = discord.Intents.default()
-intents.members = True
-intents.reactions = True
-intents.presences = True
-intents.typing = True
+intents.members, intents.reactions, intents.presences, intents.typing = True, True, True, True
 bot = commands.Bot(command_prefix='>', intents=intents, case_insensitive=True, owner_id=310863530591256577)
 bot.remove_command('help')
 
