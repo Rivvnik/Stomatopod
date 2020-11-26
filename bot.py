@@ -4,7 +4,7 @@ import os
 import json
 from utils.embuilder import generator
 
-bot = commands.Bot(command_prefix='~', case_insensitive=True, owner_id=310863530591256577)
+bot = commands.Bot(command_prefix='>', case_insensitive=True, owner_id=310863530591256577)
 bot.help_data = {}
 bot.remove_command('help')
 bot.path = os.path.join(os.path.split(os.path.abspath(__file__))[0], 'utils/utils.json')
