@@ -2,7 +2,7 @@ import discord
 from discord.ext import tasks, commands
 from discord.utils import get
 from binascii import hexlify
-status = '「勇敢な！」'
+status = '「勇敢な...！」'
 
 
 class Listeners(commands.Cog):
