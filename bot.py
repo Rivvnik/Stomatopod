@@ -1,5 +1,4 @@
 from discord.ext import commands
-from discord.utils import get
 import asyncpg
 import os
 import json
