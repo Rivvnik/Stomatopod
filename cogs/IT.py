@@ -1,14 +1,8 @@
-import discord
+import discord, asyncio, io, textwrap, traceback, re, copy
 from discord.ext import commands
-from discord.utils import get
-import asyncio
 from typing import Union
 from contextlib import redirect_stdout
-import io
-import textwrap
-import traceback
-import re
-import copy
+from discord.utils import get
 
 whitelist = []
 

@@ -1,21 +1,12 @@
-import discord
+import discord, asyncpg, json
 from discord.ext import commands
-import asyncpg
-import os
-import json
-from utils.embuilder import generator
+from utils.embuilder import generator, jsons
 
 intents = discord.Intents.default()
 intents.members, intents.reactions, intents.presences, intents.typing = True, True, True, True
 bot = commands.Bot(command_prefix='>', intents=intents, case_insensitive=True, owner_id=310863530591256577)
 bot.remove_command('help')
-
-bot.token_path, bot.utils_path = os.path.join(os.path.split(os.path.abspath(__file__))[0], 'utils/token.json'), os.path.join(os.path.split(os.path.abspath(__file__))[0], 'utils/utils.json')
-with open(bot.token_path, 'r') as x: bot.token = json.load(x)
-with open(bot.utils_path, 'r') as f: bot.utils = json.load(f)
-bot.utils["help_data"] = {}
-with open(bot.utils_path, 'w') as f: json.dump(bot.utils, f)
-bot.help_data = bot.utils["help_data"]
+jsons(bot)
 
 extensions = (
     'cogs.IT',
