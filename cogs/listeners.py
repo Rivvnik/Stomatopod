@@ -1,4 +1,4 @@
-import discord
+import discord, json
 from discord.ext import tasks, commands
 from discord.utils import get
 from binascii import hexlify
@@ -13,6 +13,7 @@ class Listeners(commands.Cog):
     @tasks.loop(seconds=1800.0)
     async def clear_help_data(self):
         self.bot.help_data = {}
+        with open(self.bot.utils_path, 'w') as f: json.dump(self.bot.utils, f)
 
     @commands.Cog.listener()
     async def on_ready(self):
