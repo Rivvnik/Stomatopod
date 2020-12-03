@@ -1,7 +1,7 @@
 import discord, asyncpg
 from discord.ext import commands
 from utils.utility import jsons, generator, save
-intents = discord.Intents.default()  # literally what are intents
+intents = discord.Intents.default()  # literally what are intents? something that VP showed me..
 intents.members, intents.reactions, intents.presences, intents.typing = True, True, True, True
 bot = commands.Bot(command_prefix='>', intents=intents, case_insensitive=True, owner_id=310863530591256577)
 bot.remove_command('help')
