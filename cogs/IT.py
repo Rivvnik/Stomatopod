@@ -89,7 +89,7 @@ class IT(commands.Cog):
         self.bot.utils["blacklist"] = []
         save(self.bot)
 
-    @commands.command()
+    @commands.command(aliases=['mute'])
     @commands.has_permissions(administrator=True)
     async def off(self, ctx, member: discord.Member):
         """<member>::::admin:Appends member to bot.blacklist"""
@@ -100,7 +100,7 @@ class IT(commands.Cog):
         else:
             await ctx.send(f"You cannot **`{self.bot.command_prefix}off`** yourself!")
 
-    @commands.command()
+    @commands.command(aliases=['unmute'])
     @commands.has_permissions(administrator=True)
     async def on(self, ctx, member: discord.Member):
         """<member>::::admin:Removes member from bot.blacklist"""
