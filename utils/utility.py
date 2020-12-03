@@ -1,13 +1,19 @@
 from discord import Member, Embed
 import os, json
 
+
 def jsons(bot):
     bot.token_path, bot.utils_path = os.path.join(os.path.split(os.path.abspath(__file__))[0], 'token.json'), os.path.join(os.path.split(os.path.abspath(__file__))[0], 'utils.json')
     with open(bot.token_path, 'r') as x: bot.token = json.load(x)
     with open(bot.utils_path, 'r') as f: bot.utils = json.load(f)
     bot.utils["help_data"] = {}
+    bot.help_data, bot.blacklist = bot.utils["help_data"], bot.utils["blacklist"]
+    save(bot)
+
+
+def save(bot):
     with open(bot.utils_path, 'w') as f: json.dump(bot.utils, f)
-    bot.help_data = bot.utils["help_data"]
+
 
 async def generator(member: Member, bot):
     embeds = []

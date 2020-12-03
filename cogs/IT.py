@@ -2,9 +2,10 @@ import discord, asyncio, io, textwrap, traceback, re, copy
 from discord.ext import commands
 from typing import Union
 from contextlib import redirect_stdout
+from utils.utility import save
 from discord.utils import get
-
 whitelist = []
+
 
 class IT(commands.Cog):
     def __init__(self, bot):
@@ -80,6 +81,35 @@ class IT(commands.Cog):
             msg.content = ctx.prefix + command
             new_ctx = await self.bot.get_context(msg)
             await self.bot.invoke(new_ctx)
+
+    @commands.command(aliases=['reset'])
+    @commands.has_permissions(administrator=True)
+    async def reutils(self, ctx):
+        """::::admin:Resets `bot.help_data`, `bot.blacklist`, and `bot.whitelist`."""
+        self.bot.utils["blacklist"] = []
+        save(self.bot)
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def off(self, ctx, member: discord.Member):
+        """<member>::::admin:Appends member to bot.blacklist"""
+        if not member.id == ctx.author.id:
+            if not member.id in self.bot.blacklist:
+                self.bot.blacklist.append(member.id)
+                save(self.bot)
+        else:
+            await ctx.send(f"You cannot **`{self.bot.command_prefix}off`** yourself!")
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def on(self, ctx, member: discord.Member):
+        """<member>::::admin:Removes member from bot.blacklist"""
+        if not member.id == ctx.author.id:
+            if member.id in self.bot.blacklist:
+                self.bot.blacklist.remove(member.id)
+                save(self.bot)
+        else:
+            await ctx.send(f"You cannot **`{self.bot.command_prefix}on`** yourself!")
 
     @commands.command(aliases=['ack'])
     @commands.is_owner()

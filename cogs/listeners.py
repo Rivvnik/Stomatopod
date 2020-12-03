@@ -1,6 +1,7 @@
 import discord, json
 from discord.ext import tasks, commands
 from discord.utils import get
+from utils.utility import save
 from binascii import hexlify
 status = '「勇敢な..！」'
 
@@ -13,7 +14,7 @@ class Listeners(commands.Cog):
     @tasks.loop(seconds=1800.0)
     async def clear_help_data(self):
         self.bot.help_data = {}
-        with open(self.bot.utils_path, 'w') as f: json.dump(self.bot.utils, f)
+        save(self.bot)
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -23,6 +24,11 @@ class Listeners(commands.Cog):
         print(f'    Client ID: {self.bot.user.id}')
         print(f'  Status set to Streaming {status}')
         print('└────────────────────────────────────┘')
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author.id in self.bot.blacklist:
+            await message.delete()
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -55,7 +61,10 @@ class Listeners(commands.Cog):
     async def on_raw_reaction_add(self, payload):
         user = self.bot.get_user(payload.user_id)
         channel = self.bot.get_channel(payload.channel_id)
-        message = await channel.fetch_message(payload.message_id)
+        try:
+            message = await channel.fetch_message(payload.message_id)
+        except discord.errors.NotFound:
+            return
         if not user.bot:
             if payload.message_id in self.bot.help_data:
                 if user.id == self.bot.help_data[payload.message_id]["author_id"]:
