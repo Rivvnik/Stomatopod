@@ -18,19 +18,27 @@ async def create_db_pool():
 
 
 @bot.command(aliases=['h'])
-async def help(ctx):
+async def help(ctx, command: str=None):
     """:::::Seriously?"""
-    embeds = await generator(ctx.author, bot)
-    del embeds[-1]
-    await ctx.message.delete()
-    for embed in embeds:
-        embed.set_footer(text=f'Page {embeds.index(embed) + 1}/{len(embeds)}')
-    message = await ctx.send(embed=embeds[0])
-    for emoji in ['\N{LEFTWARDS BLACK ARROW}', '\N{BLACK RIGHTWARDS ARROW}', '\N{CROSS MARK}']:
-        await message.add_reaction(emoji)
-    bot.help_data[message.id] = {}
-    bot.help_data[message.id]["embed_list"], bot.help_data[message.id]["index"], bot.help_data[message.id]["author_id"] = embeds, 0, ctx.author.id
-    save(bot)
+    command = command or None
+    if not command:
+        embeds = await generator(ctx.author, bot)
+        del embeds[-1]
+        await ctx.message.delete()
+        for embed in embeds:
+            embed.set_footer(text=f'Page {embeds.index(embed) + 1}/{len(embeds)}')
+        message = await ctx.send(embed=embeds[0])
+        for emoji in ['\N{LEFTWARDS BLACK ARROW}', '\N{BLACK RIGHTWARDS ARROW}', '\N{CROSS MARK}']:
+            await message.add_reaction(emoji)
+        bot.help_data[message.id] = {}
+        bot.help_data[message.id]["embed_list"], bot.help_data[message.id]["index"], bot.help_data[message.id]["author_id"] = embeds, 0, ctx.author.id
+        save(bot)
+    else:
+        try:
+            actual_command = bot.get_command(command)
+            await ctx.send(actual_command)
+        except Exception as e:
+            await ctx.send(e)
 
 if __name__ == '__main__':
     for extension in extensions:
