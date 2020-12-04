@@ -15,7 +15,7 @@ def save(bot):
     with open(bot.utils_path, 'w') as f: json.dump(bot.utils, f)
 
 
-async def search(bot, ctx, command):
+async def search(bot, ctx, command):  # an attempt to search all bot commands
     try:
         command = bot.get_command(command)
         mybed = Embed(color=0x6000ff)
