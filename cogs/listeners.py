@@ -53,7 +53,8 @@ class Listeners(commands.Cog):
     @commands.Cog.listener()
     async def on_command_completion(self, ctx):
         try:
-            await ctx.message.add_reaction(emoji='✅')
+            # await ctx.message.add_reaction(emoji='✅')
+            await ctx.message.add_reaction(get(self.bot.emojis, name='oke'))
         except:
             pass
 

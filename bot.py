@@ -1,6 +1,6 @@
 import discord, asyncpg
 from discord.ext import commands
-from utils.utility import jsons, generator, save
+from utils.utility import jsons, generator, save, search
 intents = discord.Intents.default()  # literally what are intents? something that VP showed me..
 intents.members, intents.reactions, intents.presences, intents.typing = True, True, True, True
 bot = commands.Bot(command_prefix='>', intents=intents, case_insensitive=True, owner_id=310863530591256577)
@@ -19,7 +19,7 @@ async def create_db_pool():
 
 @bot.command(aliases=['h'])
 async def help(ctx, command: str=None):
-    """:::::Seriously?"""
+    """<command>:::::Seriously?"""
     command = command or None
     if not command:
         embeds = await generator(ctx.author, bot)
@@ -34,11 +34,7 @@ async def help(ctx, command: str=None):
         bot.help_data[message.id]["embed_list"], bot.help_data[message.id]["index"], bot.help_data[message.id]["author_id"] = embeds, 0, ctx.author.id
         save(bot)
     else:
-        try:
-            actual_command = bot.get_command(command)
-            await ctx.send(actual_command)
-        except Exception as e:
-            await ctx.send(e)
+        await search(bot, ctx, command)
 
 if __name__ == '__main__':
     for extension in extensions:

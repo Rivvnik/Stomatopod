@@ -111,10 +111,10 @@ class IT(commands.Cog):
         else:
             await ctx.send(f"You cannot **`{self.bot.command_prefix}on`** yourself!")
 
-    @commands.command(aliases=['ack'])
+    @commands.command(aliases=['ack', 'black'])
     @commands.is_owner()
     async def acknowledge(self, ctx, member: discord.Member):
-        """<@user>::::admin:Acknowledge all eval directives from given user.\nAliases: `~ack`"""
+        """<@user>::::admin:Acknowledge all eval directives from given user."""
         if ctx.author.id != member.id:
             try:
                 whitelist.append(member.id)
@@ -126,10 +126,10 @@ class IT(commands.Cog):
                 await ctx.send('Acknowledged. Initiating recursion sequence...')
                 await asyncio.sleep(10)
 
-    @commands.command(aliases=['unack'])
+    @commands.command(aliases=['unack', 'unblack'])
     @commands.is_owner()
     async def reject(self, ctx, member: discord.Member):
-        """<@user>::::admin:Rejects all eval directives from given user. This is enabled by default.\nAliases: `~unack`"""
+        """<@user>::::admin:Rejects all eval directives from given user. This is enabled by default."""
         if ctx.author.id != member.id:
             try:
                 whitelist.remove(member.id)

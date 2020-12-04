@@ -15,6 +15,14 @@ def save(bot):
     with open(bot.utils_path, 'w') as f: json.dump(bot.utils, f)
 
 
+async def search(bot, ctx, command):
+    try:
+        await ctx.send(bot.get_command(command))
+    except Exception as e:
+        await ctx.send(e)
+    return
+
+
 async def generator(member: Member, bot):
     embeds = []
     mybed = Embed(color=0x6000ff)
@@ -34,9 +42,8 @@ async def generator(member: Member, bot):
             mybed.description = 'For all to use.'
             for arg in help_string[:4]:
                 arguments = arguments + f'{arg} '
-            for arg in help_string[5:]:
-                desc = desc + f'{arg}'
-                desc = '{}\nAliases: `{}`, and `{}`.'.format(desc, ", ".join(command.aliases[:-1]), command.aliases[-1]) if len(command.aliases) > 1 else '{}\nAlias: `{}`'.format(desc, command.aliases[0]) if len(command.aliases) == 1 else desc
+            desc = desc + f'{help_string[5]}'
+            desc = '{}\nAliases: `{}`, and `{}`.'.format(desc, ", ".join(command.aliases[:-1]), command.aliases[-1]) if len(command.aliases) > 1 else '{}\nAlias: `{}{}`'.format(desc, str(bot.command_prefix), command.aliases[0]) if len(command.aliases) == 1 else desc
             mybed.add_field(name=f'**{command.name}**', value=f'`{str(bot.command_prefix)}{command.name} {arguments.strip()}`\n{desc}', inline=False)
     embeds.append(mybed)
 
@@ -49,7 +56,7 @@ async def generator(member: Member, bot):
             for command in bot.get_cog(cog).get_commands():
                 arguments = str()
                 desc = str()
-                help_string = str(command.help).split(':', 5)
+                help_string = str(command.help).split(':', 6)
                 perm = help_string[4]
                 if perm == 'owner' and member.id != 310863530591256577:
                     continue
@@ -60,9 +67,8 @@ async def generator(member: Member, bot):
 
                 for arg in help_string[:4]:
                     arguments = arguments + f'{arg} '
-                for arg in help_string[5:]:
-                    desc = desc + f'{arg}'
-                desc = '{}\nAliases: `{}`, and `{}`.'.format(desc, ", ".join(command.aliases[:-1]), command.aliases[-1]) if len(command.aliases) > 1 else '{}\nAlias: `{}`'.format(desc, command.aliases[0]) if len(command.aliases) == 1 else desc
+                desc = desc + f'{help_string[5]}'
+                desc = '{}\nAliases: `{}`, and `{}`.'.format(desc, ", ".join(command.aliases[:-1]), command.aliases[-1]) if len(command.aliases) > 1 else '{}\nAlias: `{}{}`'.format(desc, str(bot.command_prefix), command.aliases[0]) if len(command.aliases) == 1 else desc
                 embed.add_field(name=f'**{command.name}**', value=f'`{str(bot.command_prefix)}{command.name} {arguments.strip()}`\n{desc}', inline=False)
             embeds.append(embed)
     return embeds
