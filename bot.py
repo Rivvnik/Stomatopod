@@ -1,11 +1,11 @@
 import discord, asyncpg
 from discord.ext import commands
-from utils.utility import jsons, generator, save, search
+import utils.utility as utility
 intents = discord.Intents.default()  # literally what are intents? something that VP showed me..
 intents.members, intents.reactions, intents.presences, intents.typing = True, True, True, True
 bot = commands.Bot(command_prefix='>', intents=intents, case_insensitive=True, owner_id=310863530591256577)
 bot.remove_command('help')
-jsons(bot)
+utility.jsons(bot)
 
 extensions = (
     'cogs.IT',
@@ -22,7 +22,7 @@ async def help(ctx, command: str=None):
     """<command>:::::Seriously?"""
     command = command or None
     if not command:
-        embeds = await generator(ctx.author, bot)
+        embeds = await utility.generator(ctx.author, bot)
         del embeds[-1]
         await ctx.message.delete()
         for embed in embeds:
@@ -32,9 +32,9 @@ async def help(ctx, command: str=None):
             await message.add_reaction(emoji)
         bot.help_data[message.id] = {}
         bot.help_data[message.id]["embed_list"], bot.help_data[message.id]["index"], bot.help_data[message.id]["author_id"] = embeds, 0, ctx.author.id
-        save(bot)
+        utility.save(bot)
     else:
-        await search(bot, ctx, command)
+        await utility.search(bot, ctx, command)
 
 if __name__ == '__main__':
     for extension in extensions:
