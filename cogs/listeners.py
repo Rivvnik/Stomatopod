@@ -1,4 +1,4 @@
-import discord, json
+import discord, json, re
 from discord.ext import tasks, commands
 from discord.utils import get
 from utils.utility import save
@@ -29,6 +29,12 @@ class Listeners(commands.Cog):
     async def on_message(self, message):
         if message.author.id in self.bot.blacklist:
             await message.delete()
+        else:
+            if re.compile(r"\b({0})\b".format("bot"), flags=re.IGNORECASE).search(message.content):
+                try:
+                    await message.add_reaction(get(self.bot.emojis, name='omw'))
+                except:
+                    pass
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):

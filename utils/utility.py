@@ -18,10 +18,7 @@ def save(bot):
 async def search(bot, ctx, command):  # an attempt to search all bot commands
     try:
         command = bot.get_command(command)
-        mybed = Embed(color=0x6000ff)
-        arguments = str()
-        desc = str()
-        help_string = str(command.help).split(':', 5)
+        mybed, arguments, desc, help_string = Embed(color=0x6000ff), str(), str(), str(command.help).split(':', 5)
         perm = help_string[4]
         if perm == 'owner' and ctx.author.id != 310863530591256577:
             return
@@ -34,8 +31,7 @@ async def search(bot, ctx, command):  # an attempt to search all bot commands
         for arg in help_string[:4]:
             arguments = arguments + f'{arg} '
         desc = desc + f'{help_string[5]}'
-        desc = '{}\nAliases: `{}`, and `{}`.'.format(desc, ", ".join(command.aliases[:-1]), command.aliases[-1]) if len(
-            command.aliases) > 1 else '{}\nAlias: `{}{}`'.format(desc, str(bot.command_prefix), command.aliases[0]) if len(command.aliases) == 1 else desc
+        desc = '{}\nAliases: `{}`, and `{}`.'.format(desc, ", ".join(command.aliases[:-1]), command.aliases[-1]) if len(command.aliases) > 1 else '{}\nAlias: `{}{}`'.format(desc, str(bot.command_prefix), command.aliases[0]) if len(command.aliases) == 1 else desc
         mybed.add_field(name=f'**{command.name}**', value=f'`{str(bot.command_prefix)}{command.name} {arguments.strip()}`\n{desc}', inline=False)
         await ctx.send(embed=mybed)
     except Exception as e:
