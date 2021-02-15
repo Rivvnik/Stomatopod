@@ -7,7 +7,7 @@ def jsons(bot):
     with open(bot.token_path, 'r') as x: bot.token = json.load(x)
     with open(bot.utils_path, 'r') as f: bot.utils = json.load(f)
     bot.utils["help_data"] = {}
-    bot.help_data, bot.blacklist = bot.utils["help_data"], bot.utils["blacklist"]
+    bot.help_data, bot.blacklist, bot.whitelist = bot.utils["help_data"], bot.utils["blacklist"], bot.utils["whitelist"]
     save(bot)
 
 

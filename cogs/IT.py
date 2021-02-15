@@ -4,7 +4,6 @@ from typing import Union
 from contextlib import redirect_stdout
 from utils.utility import save
 from discord.utils import get
-whitelist = []
 
 
 class IT(commands.Cog):
@@ -27,7 +26,7 @@ class IT(commands.Cog):
     @commands.command(hidden=True, name='eval')
     async def _eval(self, ctx, *, body: str):
         """::::admin:Evaluates a block of code.\nClient reference: `bot`\nContext reference: `ctx`\nLast in Memory: `_`"""
-        if ctx.author.id == 310863530591256577 or ctx.author.id in whitelist:
+        if ctx.author.id == 310863530591256577 or ctx.author.id in self.bot.whitelist:
             env = {
                 'bot': self.bot,
                 'ctx': ctx,
@@ -116,10 +115,12 @@ class IT(commands.Cog):
     async def acknowledge(self, ctx, member: discord.Member):
         """<@user>::::admin:Acknowledge all eval directives from given user."""
         if ctx.author.id != member.id:
-            try:
-                whitelist.append(member.id)
-            except:
-                pass
+            if not member.id in self.bot.whitelist:
+                try:
+                    self.bot.whitelist.append(member.id)
+                    save(self.bot)
+                except Exception as e:
+                    print(e)
             await ctx.send(f'Acknowledged. Overridden permissions for user `{member.display_name}`.')
         else:
             async with ctx.channel.typing():
@@ -131,15 +132,18 @@ class IT(commands.Cog):
     async def reject(self, ctx, member: discord.Member):
         """<@user>::::admin:Rejects all eval directives from given user. This is enabled by default."""
         if ctx.author.id != member.id:
-            try:
-                whitelist.remove(member.id)
-            except:
-                pass
+            if member.id in self.bot.whitelist:
+                try:
+                    self.bot.whitelist.remove(member.id)
+                    save(self.bot)
+                except Exception as e:
+                    print(e)
             await ctx.send(f'Acknowledged. Overridden permissions for user `{member.display_name}`.')
         else:
             async with ctx.channel.typing():
                 await ctx.send('Acknowledged. Initiating recursion sequence...')
                 await asyncio.sleep(10)
+
 
 def setup(bot):
     bot.add_cog(IT(bot))
