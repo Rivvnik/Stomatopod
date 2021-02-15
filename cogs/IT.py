@@ -23,6 +23,7 @@ class IT(commands.Cog):
             return f'```py\n{e.__class__.__name__}: {e}\n```'
         return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
 
+
     @commands.command(hidden=True, name='eval')
     async def _eval(self, ctx, *, body: str):
         """::::admin:Evaluates a block of code.\nClient reference: `bot`\nContext reference: `ctx`\nLast in Memory: `_`"""
@@ -68,6 +69,33 @@ class IT(commands.Cog):
             await ctx.message.add_reaction(emoji='❌')
             await ctx.send('You\'re fucking nuts if you think you\'re going to successfully execute that command here.')
 
+
+    @commands.group(aliases=['purge'])
+    @commands.has_permissions(manage_messages=True)
+    async def clear(self, ctx):
+        """<text/all>:<amount>:::mod:Deletes a range of messages.\n`text` parameter omits all attachments and hyperlinks.\nDeletes 100 messages by default without any arguments."""
+        if ctx.invoked_subcommand is None:
+            await ctx.channel.purge()
+
+
+    @clear.command()
+    @commands.has_permissions(manage_messages=True)
+    async def text(self, ctx, amount=99):
+        if not amount > 99:
+            await ctx.channel.purge(limit=int(amount)+1, check=lambda m: not m.attachments and not m.content.startswith('http'))
+        else:
+            await ctx.send("Unfortunately, there is no way to bulk delete more than 100 messages.")
+
+
+    @clear.command()
+    @commands.has_permissions(manage_messages=True)
+    async def all(self, ctx, amount=99):
+        if not amount > 99:
+            await ctx.channel.purge(limit=int(amount)+1)
+        else:
+            await ctx.send("Unfortunately, there is no way to bulk delete more than 100 messages.")
+
+
     @commands.command(hidden=True)
     @commands.has_permissions(administrator=True)
     async def sudo(self, ctx, who: Union[discord.Member, discord.User], *, command: str):
@@ -81,12 +109,14 @@ class IT(commands.Cog):
             new_ctx = await self.bot.get_context(msg)
             await self.bot.invoke(new_ctx)
 
+
     @commands.command(aliases=['reset'])
     @commands.has_permissions(administrator=True)
     async def reutils(self, ctx):
         """::::admin:Resets `bot.help_data`, `bot.blacklist`, and `bot.whitelist`."""
         self.bot.utils["blacklist"] = []
         save(self.bot)
+
 
     @commands.command(aliases=['mute'])
     @commands.has_permissions(administrator=True)
@@ -99,6 +129,7 @@ class IT(commands.Cog):
         else:
             await ctx.send(f"You cannot **`{self.bot.command_prefix}off`** yourself!")
 
+
     @commands.command(aliases=['unmute'])
     @commands.has_permissions(administrator=True)
     async def on(self, ctx, member: discord.Member):
@@ -109,6 +140,7 @@ class IT(commands.Cog):
                 save(self.bot)
         else:
             await ctx.send(f"You cannot **`{self.bot.command_prefix}on`** yourself!")
+
 
     @commands.command(aliases=['ack', 'black'])
     @commands.is_owner()
@@ -126,6 +158,7 @@ class IT(commands.Cog):
             async with ctx.channel.typing():
                 await ctx.send('Acknowledged. Initiating recursion sequence...')
                 await asyncio.sleep(10)
+
 
     @commands.command(aliases=['unack', 'unblack'])
     @commands.is_owner()
